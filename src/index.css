@@ -1,5 +1,23 @@
-html,body{
+html,
+body {
   margin: 0;
   padding: 0;
-  font-family: "Nunito", sans-serif;
+  font-family: "Inter", sans-serif;
+  min-height: 100%;
+  background-color: #e0e0e0;
+}
+a {
+  color: inherit;
+}
+.recharts-legend-wrapper {
+  padding: 0 20px !important;
+}
+.css-1aquho2-MuiTabs-indicator {
+  background-color: #87c232 !important; /* Your desired background color */
+}
+.css-j1ocbc-MuiLinearProgress-root {
+  background-color: #e0e0e0 !important;
+}
+.css-g6xalc-MuiMasonry-root {
+  flex: 1;
 }
