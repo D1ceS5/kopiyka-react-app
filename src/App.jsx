@@ -1,11 +1,13 @@
 import { useState } from "react";
 import Home from "./views/Home/Home";
 import { createTheme, ThemeProvider } from "@mui/material";
-import { GlobalContext } from "./context/GlobalContext";
+
 import { Routes, Route, BrowserRouter } from "react-router-dom";
 import Login from "./views/Login/Login";
 import Register from "./views/Register/Register";
 import Dashboard from "./views/Dashboard/Dashboard";
+import Transactions from "./views/Transactions/Transactions";
+import Analytics from "./views/Analytics/Analytics";
 
 const theme = createTheme({
   typography: {
@@ -142,16 +144,16 @@ function App() {
   return (
     <>
       <ThemeProvider theme={theme}>
-        <GlobalContext.Provider value={text}>
-          <BrowserRouter>
-            <Routes>
-              <Route path="/auth/login" element={<Login />} />
-              <Route path="/auth/register" element={<Register />} />
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/" element={<Home />} />
-            </Routes>
-          </BrowserRouter>
-        </GlobalContext.Provider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/auth/login" element={<Login />} />
+            <Route path="/auth/register" element={<Register />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/transactions" element={<Transactions />} />
+            <Route path="/analytics" element={<Analytics />} />
+            <Route path="/" element={<Home />} />
+          </Routes>
+        </BrowserRouter>
       </ThemeProvider>
     </>
   );

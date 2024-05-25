@@ -2,7 +2,6 @@ import React from "react";
 import { styled } from "@mui/system";
 import { LinearProgress, Typography } from "@mui/material";
 
-// Styled components for custom styling
 const Container = styled("div")({
   backgroundColor: "#17191A",
   borderRadius: "5px",
@@ -24,8 +23,7 @@ const StyledProgressBar = styled(LinearProgress)({
   height: "40px",
   marginTop: "8px",
   "& .MuiLinearProgress-barColorPrimary": {
-    // Override primary color for the progress bar
-    backgroundColor: "#87c232", // Green color for the progress bar
+    backgroundColor: "#87c232",
   },
 });
 
@@ -35,7 +33,6 @@ const StyledTextContainer = styled(`div`)({
   justifyContent: "space-between",
 });
 
-// Component
 const ProgressBar = ({ percent, text, title, subtitle }) => {
   return (
     <Container>

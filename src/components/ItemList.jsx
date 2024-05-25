@@ -1,10 +1,9 @@
 import React from "react";
-import { Box, Typography, Button, Grid } from "@mui/material";
+import { Box, Typography, Grid } from "@mui/material";
 import { styled } from "@mui/system";
 import GreenButton from "./GreenButton";
 import { formatToUAH } from "../utils";
 
-// Styled component for the container
 const Container = styled(Box)({
   backgroundColor: "#17191a",
   padding: "20px",
@@ -12,7 +11,6 @@ const Container = styled(Box)({
   borderRadius: "5px",
 });
 
-// Styled component for the text
 const Text = styled(Typography)({
   fontWeight: "bold",
 });
@@ -26,9 +24,10 @@ const StyledBox = styled(Box)({
   color: "black",
 });
 
-const ItemList = ({ items }) => {
+const ItemList = ({ items, showButton = true, title }) => {
   return (
     <Container>
+      {!items.length && <Typography>Транзакцій не знайдено</Typography>}
       <Grid
         sx={{
           display: "flex",
@@ -36,8 +35,14 @@ const ItemList = ({ items }) => {
           justifyContent: "space-between",
         }}
       >
-        <Text>Останні записи</Text>
-        <GreenButton text={"Записи"} style={{ padding: "10px 20px" }} />
+        <Text>{title}</Text>
+        {showButton && (
+          <GreenButton
+            text={"Записи"}
+            href={"/transaction"}
+            style={{ padding: "10px 20px" }}
+          />
+        )}
       </Grid>
       {items &&
         items.map((item) => {
@@ -45,12 +50,14 @@ const ItemList = ({ items }) => {
             <StyledBox mt={2} key={item.transaction_id}>
               <Box>
                 <Text>{item.category}</Text>
-                <Text color={"#17191A"}>
+                <Text color={"#717171"}>
                   {new Date(item.transaction_date).toLocaleDateString("en-UK")}
                 </Text>
               </Box>
 
-              <Text color={"#DC0000"}>{formatToUAH(item.value)}</Text>
+              <Text color={item.value < 0 ? "#DC0000" : "#87C232"}>
+                {formatToUAH(item.value)}
+              </Text>
             </StyledBox>
           );
         })}

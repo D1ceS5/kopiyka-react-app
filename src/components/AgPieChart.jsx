@@ -26,7 +26,6 @@ const PieChartComponent = ({ data, title, subtitle, additionalText }) => {
     const categoryMap = {};
     let totalValue = 0;
 
-    // Calculate total value and populate categoryMap
     data.forEach((item) => {
       const value = Math.abs(item.value);
       totalValue += value;
@@ -35,25 +34,24 @@ const PieChartComponent = ({ data, title, subtitle, additionalText }) => {
       } else {
         categoryMap[item.category] = {
           value: value,
-          color: item.color, // Assuming each item might have a specific color
+          color: item.color,
         };
       }
     });
 
-    // Calculate percentage for each category and format chart data
     return Object.keys(categoryMap).map((category, index) => ({
       category,
       label: `${category} - ${formatToUAH(categoryMap[category].value)}`,
       value: categoryMap[category].value,
       percentage: (categoryMap[category].value / totalValue) * 100,
-      color: categoryMap[category].color || COLORS[index % COLORS.length], // Use custom or default color
+      color: categoryMap[category].color || COLORS[index % COLORS.length],
     }));
   }, [data]);
 
   const options = {
     autoSize: true,
     background: {
-      fill: "transparent", // Setting the chart background to transparent
+      fill: "transparent",
     },
     data: chartData,
     theme: {
@@ -75,7 +73,6 @@ const PieChartComponent = ({ data, title, subtitle, additionalText }) => {
           color: "black",
           fontWeight: "bold",
           formatter: ({ datum }) => {
-            console.log("Datum", datum);
             return `${datum.percentage.toFixed(0)}%`;
           },
         },

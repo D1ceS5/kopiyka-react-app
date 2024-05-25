@@ -58,7 +58,25 @@ const useAuth = () => {
       throw new Error("Login failed");
     }
   };
+  const updateUser = async (userId, username) => {
+    setLoading(true);
 
+    const response = await fetch(BASE_URL + "/updateUsername", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ userId, newUsername: username }),
+    });
+    if (!response.ok) {
+      setLoading(false);
+      throw new Error("Update failed");
+    }
+    const data = await response.json();
+
+    setLoading(false);
+    setUser(data.user);
+  };
   const register = async (username, email, password) => {
     try {
       setLoading(true);
@@ -75,7 +93,7 @@ const useAuth = () => {
       }
       const data = await response.json();
       const token = data.token;
-      console.log("Data", data);
+
       cookies.set("token", token, { maxAge: 3600 });
       setLoading(false);
       setUser(data.user);
@@ -90,7 +108,7 @@ const useAuth = () => {
     setUser(null);
   };
 
-  return { user, loading, login, register, logout };
+  return { user, loading, login, register, logout, updateUser };
 };
 
 export default useAuth;

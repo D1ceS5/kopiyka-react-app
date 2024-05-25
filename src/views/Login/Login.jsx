@@ -1,38 +1,37 @@
-import React, { useState } from 'react';
-import { TextField, Typography } from '@mui/material';
-import { styled } from '@mui/material/styles';
-import { Link, useNavigate } from 'react-router-dom';
-import GreenButton from '../../components/GreenButton';
-import useAuth from '../../hooks/auth';
+import React, { useState } from "react";
+import { TextField, Typography } from "@mui/material";
+import { styled } from "@mui/material/styles";
+import { Link, useNavigate } from "react-router-dom";
+import GreenButton from "../../components/GreenButton";
+import useAuth from "../../hooks/auth";
 
-const StyledForm = styled('form')({
-  marginTop: '1em',
-  display: 'flex',
-  flexDirection: 'column',
-  width: '100%',
-  maxWidth: '400px',
+const StyledForm = styled("form")({
+  marginTop: "1em",
+  display: "flex",
+  flexDirection: "column",
+  width: "100%",
+  maxWidth: "400px",
 });
 
-const StyledContainer = styled('div')({
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  height: '100vh',
-  backgroundColor: '#2D2F31',
-  color: '#ffffff',
+const StyledContainer = styled("div")({
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  height: "100vh",
+  backgroundColor: "#2D2F31",
+  color: "#ffffff",
 });
 
 function Login() {
   const [formData, setFormData] = useState({
-    email: '',
-    password: '',
+    email: "",
+    password: "",
   });
 
-  
   const navigate = useNavigate();
-  const { login,user,loading } = useAuth();
+  const { login, user, loading } = useAuth();
 
-  if(user) navigate("/dashboard")
+  if (user) navigate("/dashboard");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -43,25 +42,24 @@ function Login() {
   };
 
   const handleSubmit = async (e) => {
-    console.log('Call');
     e.preventDefault();
     const { email, password } = formData;
 
+    if (!email || !password) return alert("Please fill up all fields");
+
     try {
-      login(email, password).then(()=>{
-        console.log("Logged in");
-        navigate('/dashboard'); // Redirect to dashboard after successful login
-      }); // Call the login function from useAuth
-      
+      login(email, password).then(() => {
+        navigate("/dashboard");
+      });
     } catch (error) {
-      console.error('Error logging in:', error);
-      // Handle error, such as displaying error message to user
+      alert("Login failed,try another credentials");
+      console.error("Error logging in:", error);
     }
   };
 
   return (
     <StyledContainer>
-      <Typography sx={{marginTop:'100px'}} component="h1" variant="h5">
+      <Typography sx={{ marginTop: "100px" }} component="h1" variant="h5">
         Увійти
       </Typography>
       <StyledForm onSubmit={handleSubmit} noValidate>
@@ -97,11 +95,11 @@ function Login() {
           variant="contained"
           color="primary"
           onClick={handleSubmit}
-          style={{ marginTop: '24px' }}
-          text={'Увійти'}
+          style={{ marginTop: "24px" }}
+          text={"Увійти"}
         />
-          
-        <Typography component="p" style={{ marginTop: '20px' }}>
+
+        <Typography component="p" style={{ marginTop: "20px" }}>
           Немає аккаунту? <Link to="/auth/register">Створити</Link>
         </Typography>
       </StyledForm>

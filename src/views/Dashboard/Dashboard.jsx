@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useState, useMemo } from "react";
 import useAuth from "../../hooks/auth";
 import { useNavigate } from "react-router-dom";
 import useBalance from "../../hooks/balance";
@@ -17,6 +17,7 @@ import { formatToUAH } from "../../utils";
 import { Select, MenuItem, Typography } from "@mui/material";
 import ProgressBar from "../../components/ProgressBar";
 import ItemList from "../../components/ItemList";
+import MonthlyChart from "../../components/MonthlyChart";
 
 function Dashboard() {
   document.title = "Панель керування";
@@ -31,13 +32,12 @@ function Dashboard() {
     filteredTransactions,
     selectedRange,
     changeRange,
+    isBalanceSet,
   } = useBalance(user?.user_id);
   const isLoading = loading || loadingList.length > 0;
   const [createOpen, setCreateOpen] = useState(false);
   const currentBalance = balanceList[0];
 
-  console.log("Transactions", filteredTransactions);
-  console.log(selectedRange);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
@@ -95,13 +95,13 @@ function Dashboard() {
           : currentBalance?.balance))) *
       100
   );
-  console.log(percent);
+
   if (!user && !loading) navigation("/auth/login");
 
   return (
     <>
       {isLoading && <Loader />}
-      {!isLoading && balanceList.length === 0 && (
+      {!isLoading && !isBalanceSet && balanceList.length === 0 && (
         <Grid
           sx={{
             background: "#E0E0E0",
@@ -162,7 +162,14 @@ function Dashboard() {
                 percent={percent}
               />
               <PieChartComponent data={difference} title={"Залишок"} />
-              <ItemList items={transactionList.slice(0, 3)} />
+              <ItemList
+                items={transactionList.slice(0, 3)}
+                title={"Останні записи"}
+              />
+              <MonthlyChart
+                transactions={transactionList}
+                totalBalance={currentBalance.balance}
+              />
             </Masonry>
           </ContentWrapper>
         </div>
@@ -171,6 +178,7 @@ function Dashboard() {
         isOpen={createOpen}
         createTransaction={createTransaction}
         handleClose={() => setCreateOpen(false)}
+        balanceList={balanceList}
       />
     </>
   );

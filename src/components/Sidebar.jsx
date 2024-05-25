@@ -13,7 +13,6 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import SpaceDashboardIcon from "@mui/icons-material/SpaceDashboard";
 import StickyNote2Icon from "@mui/icons-material/StickyNote2";
 import PollIcon from "@mui/icons-material/Poll";
-import FileOpenIcon from "@mui/icons-material/FileOpen";
 import { Link } from "react-router-dom";
 import ProfileBar from "./ProfileBar";
 import { useLocation } from "react-router-dom";
@@ -54,8 +53,6 @@ const Sidebar = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const isSm = useMediaQuery(theme.breakpoints.down("sm"));
   const location = useLocation();
-
-  console.log("LOCATION", location.pathname);
 
   const handleDrawerToggle = () => {
     setOpen(!open);
@@ -124,20 +121,6 @@ const Sidebar = () => {
             <ListItemText sx={{ color: "#FFFFFF" }} primary={"Аналітика"} />
           </ListItem>
         </Link>
-        <Link to={"/export"}>
-          <ListItem
-            sx={{
-              backgroundColor: location.pathname === "/export" ? "#232526" : "",
-              gap: "10px",
-              ":hover": { backgroundColor: "#232526" },
-            }}
-          >
-            <ListItemIcon>
-              <FileOpenIcon sx={{ fill: "#FFFFFF" }} />
-            </ListItemIcon>
-            <ListItemText sx={{ color: "#FFFFFF" }} primary={"Експорт"} />
-          </ListItem>
-        </Link>
       </List>
     </DrawerWrapper>
   );
@@ -188,7 +171,7 @@ const Sidebar = () => {
         open={open}
         onClose={handleDrawerToggle}
         ModalProps={{
-          keepMounted: true, // Better open performance on mobile.
+          keepMounted: true,
         }}
       >
         {drawer}

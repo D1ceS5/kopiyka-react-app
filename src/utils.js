@@ -7,3 +7,12 @@ export const formatToUAH = (number) => {
   });
   return formatter.format(number);
 };
+
+export const formatDate = (date) => {
+  date = new Date(date);
+  const year = date.getFullYear();
+  const monthNames = new Intl.DateTimeFormat("uk-UA", {
+    month: "long",
+  }).format(date);
+  return `${monthNames} ${year}`;
+};

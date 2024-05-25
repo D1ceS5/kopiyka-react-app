@@ -1,41 +1,38 @@
-import React, { useState } from 'react';
-import { TextField, Button, Container, Typography } from '@mui/material';
-import { styled } from '@mui/material/styles';
-import { Link } from 'react-router-dom';
-import GreenButton from '../../components/GreenButton';
-import useAuth from '../../hooks/auth';
-import { useNavigate } from 'react-router-dom';
-const StyledForm = styled('form')({
-  marginTop: '1em',
-  display: 'flex',
-  flexDirection: 'column',
-  width: '100%', // Fix as per your requirement
-  maxWidth: '400px', // Fix as per your requirement
+import React, { useState } from "react";
+import { TextField, Button, Container, Typography } from "@mui/material";
+import { styled } from "@mui/material/styles";
+import { Link } from "react-router-dom";
+import GreenButton from "../../components/GreenButton";
+import useAuth from "../../hooks/auth";
+import { useNavigate } from "react-router-dom";
+const StyledForm = styled("form")({
+  marginTop: "1em",
+  display: "flex",
+  flexDirection: "column",
+  width: "100%",
+  maxWidth: "400px",
 });
-const StyledContainer = styled('div')({
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  height: '100vh',
-  backgroundColor: '#2D2F31',
-  color: '#ffffff',
+const StyledContainer = styled("div")({
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  height: "100vh",
+  backgroundColor: "#2D2F31",
+  color: "#ffffff",
 });
 
 function Register() {
   const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-    confirmPassword: '',
-    username: ''
+    email: "",
+    password: "",
+    confirmPassword: "",
+    username: "",
   });
 
-
   const navigate = useNavigate();
-  const { register,user,loading } = useAuth();
+  const { register, user, loading } = useAuth();
 
-  if(user) navigate("/dashboard")
-
-  console.log("1",user);
+  if (user) navigate("/dashboard");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -47,24 +44,27 @@ function Register() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { username,email, password, confirmPassword } = formData;
+    const { username, email, password, confirmPassword } = formData;
+
+    if (!username || !email || !password || !confirmPassword) {
+      return alert("Please fill up all fields");
+    }
+
     if (password !== confirmPassword) {
-      alert('Passwords do not match');
+      alert("Passwords do not match");
       return;
     }
 
     try {
-      await register(username,email, password); // Call the register function from useAuth
-      console.log("21",user);
+      await register(username, email, password);
     } catch (error) {
-      console.error('Error registering:', error);
-      // Handle error, such as displaying error message to user
+      console.error("Error registering:", error);
     }
   };
 
   return (
     <StyledContainer>
-      <Typography sx={{marginTop:'100px'}} component="h1" variant="h5">
+      <Typography sx={{ marginTop: "100px" }} component="h1" variant="h5">
         Створити Аккаунт
       </Typography>
       <StyledForm onSubmit={handleSubmit} noValidate>
@@ -123,12 +123,12 @@ function Register() {
           type="submit"
           variant="contained"
           color="primary"
-          style={{ marginTop: '24px' }}
+          style={{ marginTop: "24px" }}
           onClick={handleSubmit}
           text={loading ? "Завантаження..." : "Створити"}
         />
 
-        <Typography component="p" style={{ marginTop: '20px' }}>
+        <Typography component="p" style={{ marginTop: "20px" }}>
           Вже є аккаунт? <Link to="/auth/login">Увійти</Link>
         </Typography>
       </StyledForm>

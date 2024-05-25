@@ -15,7 +15,6 @@ import {
   Tab,
 } from "@mui/material";
 import { transactions } from "../constants";
-import useBalance from "../hooks/balance";
 
 const CreateTransactionWrapper = styled("div")({
   display: "flex",
@@ -61,7 +60,12 @@ const StyledTab = styled(Tab)`
   }
 `;
 
-function CreateTransaction({ createTransaction, isOpen, handleClose }) {
+function CreateTransaction({
+  createTransaction,
+  isOpen,
+  handleClose,
+  balanceList,
+}) {
   const [value, setValue] = useState("");
   const [selectedItem, setSelectedItem] = useState(null);
   const [selectedDate, setSelectedDate] = useState(
@@ -70,7 +74,7 @@ function CreateTransaction({ createTransaction, isOpen, handleClose }) {
   const [tab, setTab] = useState(1);
 
   const { user } = useAuth();
-  const { balanceList } = useBalance(user?.user_id);
+
   const handleInput = (e) => setValue(e.target.value);
   const handleClick = (e) => {
     e.preventDefault();

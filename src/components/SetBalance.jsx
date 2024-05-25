@@ -20,6 +20,7 @@ function SetBalance({ createBalance }) {
   const handleInput = (e) => setBalance(e.target.value);
   const handleClick = (e) => {
     e.preventDefault();
+    if (!balance) return alert("Fill up balance");
     createBalance({ balance, userId: user?.user_id });
   };
 

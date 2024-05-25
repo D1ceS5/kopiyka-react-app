@@ -5,7 +5,9 @@ const useBalance = (userId) => {
   const [transactionList, setTransactionList] = useState([]);
   const [filteredTransactions, setFilteredTransactions] = useState([]);
   const [loadingList, setLoadingList] = useState([]);
+  const [isBalanceSet, setIsBalanceSet] = useState(true);
   const [selectedRange, setSelectedRange] = useState("month");
+  const [selectedCategory, setSelectedCategory] = useState();
 
   useEffect(() => {
     if (!balanceList.length) getBalanceList();
@@ -17,58 +19,66 @@ const useBalance = (userId) => {
     const response = await fetch(BASE_URL + "/balances?userId=" + userId);
     const balances = await response.json();
 
-    setBalanceList(() => balances.balances);
+    if (!balances.balances.length && userId) setIsBalanceSet(false);
+    setBalanceList(balances.balances);
     setLoadingList((prev) => {
       return prev.filter((l) => l !== "balance");
     });
   };
+  const filter = (range = selectedRange, type = selectedCategory) => {
+    let date = new Date();
+    let transactionsCopy = transactionList;
 
-  const changeRange = (range, date = new Date()) => {
     switch (range) {
       case "year": {
         const currentYear = date.getFullYear();
-        setFilteredTransactions(
-          transactionList.filter((t) => {
-            const transactionDate = new Date(t.transaction_date);
-            return currentYear == transactionDate.getFullYear();
-          })
-        );
-        setSelectedRange(range);
+        transactionsCopy = transactionList.filter((t) => {
+          const transactionDate = new Date(t.transaction_date);
+          return currentYear == transactionDate.getFullYear();
+        });
+
         break;
       }
       case "month": {
         const currentYear = date.getFullYear();
         const currentMonth = date.getMonth();
-        setFilteredTransactions(
-          transactionList.filter((t) => {
-            const transactionDate = new Date(t.transaction_date);
-            return (
-              currentMonth == transactionDate.getMonth() &&
-              currentYear == transactionDate.getFullYear()
-            );
-          })
-        );
-        setSelectedRange(range);
+        transactionsCopy = transactionList.filter((t) => {
+          const transactionDate = new Date(t.transaction_date);
+          return (
+            currentMonth == transactionDate.getMonth() &&
+            currentYear == transactionDate.getFullYear()
+          );
+        });
         break;
       }
       case "day": {
         const currentYear = date.getFullYear();
         const currentMonth = date.getMonth();
         const currentDay = date.getDate();
-        setFilteredTransactions(
-          transactionList.filter((t) => {
-            const transactionDate = new Date(t.transaction_date);
-            return (
-              currentMonth == transactionDate.getMonth() &&
-              currentYear == transactionDate.getFullYear() &&
-              currentDay == transactionDate.getDate()
-            );
-          })
-        );
-        setSelectedRange(range);
+
+        transactionsCopy = transactionList.filter((t) => {
+          const transactionDate = new Date(t.transaction_date);
+          return (
+            currentMonth == transactionDate.getMonth() &&
+            currentYear == transactionDate.getFullYear() &&
+            currentDay == transactionDate.getDate()
+          );
+        });
         break;
       }
     }
+    if (type)
+      transactionsCopy = transactionsCopy.filter((t) => t.category === type);
+
+    setFilteredTransactions(transactionsCopy);
+  };
+  const changeRange = (range, date = new Date()) => {
+    setSelectedRange(range);
+    filter(range);
+  };
+  const changeCategory = (category) => {
+    setSelectedCategory(category);
+    filter(null, category);
   };
 
   const getTransactionList = async () => {
@@ -95,6 +105,7 @@ const useBalance = (userId) => {
 
   const createBalance = async (balance) => {
     setLoadingList((prev) => [...prev, "createBalance"]);
+
     await fetch(BASE_URL + "/createBalance", {
       method: "POST",
       headers: {
@@ -128,8 +139,11 @@ const useBalance = (userId) => {
     transactionList,
     loadingList,
     selectedRange,
+    selectedCategory,
     filteredTransactions,
+    isBalanceSet,
     changeRange,
+    changeCategory,
     getBalanceList,
     getTransactionList,
     createBalance,
